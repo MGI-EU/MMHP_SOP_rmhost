@@ -1,0 +1,26 @@
+params:
+    fastp:
+      min_len: 50 # Recommended value >= 50
+      n_base_limit: 0 # Recommended value 0 . 0-1 for fraction, >1 for count
+      adapter_r1: "AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA" # adapter for BGI-SEQ
+      adapter_r2: "AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG" # adapter for BGI-SEQ
+    rmhost:
+      bowtie2_index: "/path/to/bowtie2_index/hg38/hg38" # human genome reference bowtie2 index (prefix)
+      bowtie2_maxins: 500 # Recommended value 500 (bowtie2 default).
+      threads: 8
+    metaphlan3:
+      bowtie2db: "/path/to/metaphlan/database/" # the path contains built bowtie2 index of metaphlan database
+      index: "mpa_v30_CHOCOPhlAn_201901" # metaphlan bowtie2 index name (prefix)
+      threads: 8
+
+assay:
+    trimming: "1.assay/01.trimming"
+    rmhost: "1.assay/02.rmhost"
+    profile: "1.assay/03.profile/metaphlan3"
+
+results:
+    "2.result"
+
+logs:
+    trimming: "1.assay/logs/01.trimming"
+    rmhost: "1.assay/logs/02.rmhost"
