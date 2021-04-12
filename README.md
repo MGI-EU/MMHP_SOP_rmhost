@@ -57,6 +57,8 @@ PBS jobs management (`qsub`, `qstat`) with the help of [snakemake](https://snake
 
 ## 3. Installation
 
+It's recommended to use [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to simplify the installation.
+
 ```shell
 conda create -n mmhp_sop_rmhost python=3.6.13
 conda activate mmhp_sop_rmhost

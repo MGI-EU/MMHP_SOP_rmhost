@@ -1,9 +1,9 @@
 params:
     fastp:
       min_len: 50 # Recommended value >= 50
-      n_base_limit: 0 # Recommended value 0 . 0-1 for fraction, >1 for count
-      adapter_r1: "AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA" # adapter for BGI-SEQ
-      adapter_r2: "AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG" # adapter for BGI-SEQ
+      n_base_limit: 0 # Recommended value 0 .
+      adapter_r1: "AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA" # adapter for read1. here is BGI-SEQ adapter
+      adapter_r2: "AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG" # adapter for read2. here is BGI-SEQ adapter
     rmhost:
       bowtie2_index: "/path/to/bowtie2_index/hg38/hg38" # human genome reference bowtie2 index (prefix)
       bowtie2_maxins: 500 # Recommended value 500 (bowtie2 default).
