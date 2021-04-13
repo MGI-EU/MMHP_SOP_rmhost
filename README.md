@@ -49,11 +49,11 @@ PBS jobs management (`qsub`, `qstat`) with the help of [snakemake](https://snake
 ### 2.2. Database
 
 - Human reference (for bowtie2 index):
-    - [CHM13](https://github.com/nanopore-wgs-consortium/CHM13)
-    - [Hg38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.39/)
+  - [CHM13](https://github.com/nanopore-wgs-consortium/CHM13)
+  - [Hg38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.39/)
 - MetaPhlAn3 index ([new version](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-3.0)):
-    - mpa_v30_CHOCOPhlAn_201901
-    - [more db version](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)
+  - mpa_v30_CHOCOPhlAn_201901
+  - [more db version](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)
 
 ## 3. Installation
 
@@ -74,22 +74,62 @@ cd MMHP_SOP_rmhost
 
 ## 4. Usage
 
-### 4.1. Preparation
+### 4.1. Database Preparation
 
-Please edit `sample.txt`, `config.yaml`, `cluster.yaml` files according to users' needs.
+For human genome reference:
+
+```shell
+#cd MMHP_SOP_rmhost
+mkdir -p database/human_genome/
+wget --continue -q https://s3.amazonaws.com/nanopore-human-wgs/chm13/assemblies/chm13.draft_v1.0.fasta.gz
+
+########
+## Users would better add chromosome Y from Hg38 to CHM13 reference because CHM13 doesn't contain chrY.
+## For chrY, users could manually download Hg38.p13 chromosome Y sequence from https://www.ncbi.nlm.nih.gov/nuccore/CM000686.2?report=fasta 
+## After downloading, change the chromosome name to ">chrY"
+## Assume that the chrY sequence file has been named to hg38.chrY.fasta
+########
+
+gzip -dc chm13.draft_v1.0.fasta.gz > database/human_genome/human_reference.fasta
+cat hg38.chrY.fasta >> database/human_genome/human_reference.fasta
+
+#conda activate mmhp_sop_rmhost
+bowtie2-build -f --threads 4 database/human_genome/human_reference.fasta database/human_genome/human_reference
+```
+
+For MetaPhlAn3.0 refernece:
+
+```shell
+########
+## MetaPhlAn provides the function to automatically download and build reference
+## We can choose the reference version through --index option.
+########
+mkdir -p database/metaphlan_database/
+metaphlan --install --index mpa_v30_CHOCOPhlAn_201901 --bowtie2db ./database/metaphlan_database
+```
+
+### 4.2. Configuration Preparation
+
+Please edit `sample.txt`, `config.yaml`, `cluster.yaml` files in `MMHP_SOP_rmhost` folder according to users' needs.
 
 The most important parameters to edit:
 
 - `sample.txt`: tab-delimited file path
 - `config.yaml`:
-    - `fastp`: adapter_r1, adapter_r2
-    - `rmhost`: bowtie2_index
-    - `metaphlan3`: bowtie2db, index
+  - `fastp`: adapter_r1, adapter_r2
+  - `rmhost`: bowtie2_index
+  - `metaphlan3`: bowtie2db, index 
 - `cluster.yaml`:
-    - `__default__`: queue, project
-    - others: mem, cores
+  - `__default__`: queue, project
+  - others: mem, cores
 
-### 4.2. Run
+Note:
+
+- `rmhost.bowtie2_index` should be the same as `bowtie2-build` output in human genome reference preparation step
+- `metaphlan3.bowtie2db` should be the same as `--bowtie2db` in metaphlan reference preparation step
+- `metaphlan3.index` should be the same as `--index` in metaphlan reference preparation step
+
+### 4.3. Run
 
 ```shell
 #conda activate mmhp_sop_rmhost
@@ -108,17 +148,17 @@ April 12th, 2021
 
 ### Todo
 
-+ assembled contigs test
-+ min_len test
-+ add more test details and results (1000 genome samples)
-+ rgi
+- assembled contigs test
+- min_len test
+- add more test details and results (1000 genome samples)
+- rgi
 
 ### Complete
 
-+ cutadapt test
-+ fastp parameters test
-+ bowtie2 parameters test
-+ CHM13 and Hg38 reference test
+- cutadapt test
+- fastp parameters test
+- bowtie2 parameters test
+- CHM13 and Hg38 reference test
 
 ## Reference
 
