@@ -1,6 +1,6 @@
 params:
     fastp:
-      min_len: 50 # Recommended value >= 50
+      min_len: 60 # Recommended value >= 50. MGP use "60", which is observed a significant improvement in alignment specifity.
       n_base_limit: 0 # Recommended value 0 .
       adapter_r1: "AAGTCGGAGGCCAAGCGGTCTTAGGAAGACAA" # adapter for read1. here is BGI-SEQ adapter
       adapter_r2: "AAGTCGGATCGTAGCCATGTCGTTCTGTGAGCCAAGGAGTTG" # adapter for read2. here is BGI-SEQ adapter

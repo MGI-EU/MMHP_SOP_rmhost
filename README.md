@@ -6,6 +6,25 @@ The "remove-host" standard operating procedure in MMHP (The Million Microbiome o
 
 Current version only supports [PBS job management](https://albertsk.files.wordpress.com/2011/12/pbs.pdf) (`qsub`, `qstat`) and Paired-end reads analyss.
 
+- [MMHP - Standard Operating Procedure - Removing Host Sequence](#mmhp---standard-operating-procedure---removing-host-sequence)
+  - [Notification](#notification)
+  - [1. Introduction](#1-introduction)
+  - [2. Requirements](#2-requirements)
+    - [2.1. Software (Tested version)](#21-software-tested-version)
+    - [2.2. Database](#22-database)
+  - [3. Installation](#3-installation)
+  - [4. Usage](#4-usage)
+    - [4.1. Database Preparation](#41-database-preparation)
+    - [4.2. Configuration Preparation](#42-configuration-preparation)
+    - [4.3. Run](#43-run)
+  - [5. Updates](#5-updates)
+  - [6. Analysis Plan](#6-analysis-plan)
+    - [Todo](#todo)
+    - [Complete](#complete)
+  - [Reference](#reference)
+  - [Acknowledgement](#acknowledgement)
+  - [License](#license)
+
 ## 1. Introduction
 
 The pipeline in this repository is part of the Standard Operation Procedure (SOP) of MMHP. The function of this repository is metagenome raw data trimming and removing human genome sequence.
@@ -118,7 +137,7 @@ The most important parameters to edit:
 - `config.yaml`:
   - `fastp`: adapter_r1, adapter_r2
   - `rmhost`: bowtie2_index
-  - `metaphlan3`: bowtie2db, index 
+  - `metaphlan3`: bowtie2db, index
 - `cluster.yaml`:
   - `__default__`: queue, project
   - others: mem, cores
