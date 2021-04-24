@@ -1,31 +1,37 @@
 # MMHP - Standard Operating Procedure - Removing Host Sequence
 
-The "remove-host" standard operating procedure in MMHP (The Million Microbiome of Humans Project). This repository is the standard pipeline for removing human genome sequence from metagenome data.
+The "remove-host" standard operating procedure in MMHP (The Million Microbiome of Humans Project). This repository is the standard pipeline for removing human genome sequence from metagenome data, containing profiling step, based on an internal analysis pipeline.
 
 ## Notification
 
 Current version only supports [PBS job management](https://albertsk.files.wordpress.com/2011/12/pbs.pdf) (`qsub`, `qstat`) and Paired-end reads analyss.
 
+## Contents
+
 - [MMHP - Standard Operating Procedure - Removing Host Sequence](#mmhp---standard-operating-procedure---removing-host-sequence)
   - [Notification](#notification)
-  - [1. Introduction](#1-introduction)
-  - [2. Requirements](#2-requirements)
-    - [2.1. Software (Tested version)](#21-software-tested-version)
-    - [2.2. Database](#22-database)
-  - [3. Installation](#3-installation)
-  - [4. Usage](#4-usage)
-    - [4.1. Database Preparation](#41-database-preparation)
-    - [4.2. Configuration Preparation](#42-configuration-preparation)
-    - [4.3. Run](#43-run)
-  - [5. Updates](#5-updates)
-  - [6. Analysis Plan](#6-analysis-plan)
+  - [Contents](#contents)
+  - [1. Overview](#1-overview)
+    - [Introduction](#introduction)
+    - [Contributors](#contributors)
+    - [Acknowledgement](#acknowledgement)
+    - [Citation](#citation)
+    - [Support](#support)
+  - [2. Installation](#2-installation)
+    - [2.1. Install Requirements (Tested version)](#21-install-requirements-tested-version)
+    - [2.2. Prepare Database](#22-prepare-database)
+    - [2.3. Install the Pipeline](#23-install-the-pipeline)
+  - [3. Usage](#3-usage)
+    - [3.1. Configuration Preparation](#31-configuration-preparation)
+    - [3.2. Run](#32-run)
+  - [4. Updates](#4-updates)
+  - [5. Project Plan](#5-project-plan)
     - [Todo](#todo)
     - [Complete](#complete)
-  - [Reference](#reference)
-  - [Acknowledgement](#acknowledgement)
-  - [License](#license)
 
-## 1. Introduction
+## 1. Overview
+
+### Introduction
 
 The pipeline in this repository is part of the Standard Operation Procedure (SOP) of MMHP. The function of this repository is metagenome raw data trimming and removing human genome sequence.
 
@@ -41,13 +47,39 @@ The pipeline includes three main steps:
 2. Removing host sequence (human genome) from trimmed metagenome fastq data.
 3. Profiling host-seq-removed reads.
 
-The pipeline is extracted and modified from [ohmeta/metapi](https://github.com/ohmeta/metapi).
+The pipeline is extracted and modified from [ohmeta/metapi](https://github.com/ohmeta/metapi) with the help of Liu Tian (from BGI-Research). In order to simplify the usage, we use [Snakemake](https://snakemake.readthedocs.io/), a workflow managemer, to wrap the pipeline.
 
-## 2. Requirements
+### Contributors
+
+(Researcher, Organization/Institution) in alphabetical order.
+
+- Bochen Cheng, MGI
+- Liu Tian, BGI-Research
+- Mathieu Almeida, INRAE MetaGenoPolis
+- Shixu He, MGI
+
+### Acknowledgement
+
+(Researcher, Organization/Institution) in alphabetical order.
+
+- ‪Florian Plaza Oñate, INRAE MetaGenoPolis
+- Jie Zhu, BGI-Research
+
+### Citation
+
+()
+
+### Support
+
+Please feel free to [leave us issues](https://github.com/MGI-EU/MMHP_SOP_rmhost/issues/new/choose) for supports or bug reports.
+
+## 2. Installation
 
 PBS jobs management (`qsub`, `qstat`) with the help of [snakemake](https://snakemake.readthedocs.io/en/stable/) workflow management for current version.
 
-### 2.1. Software (Tested version)
+### 2.1. Install Requirements (Tested version)
+
+We use [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to simplify the installation.
 
 - Python: v3.6.13
   - Packages: [metaphlan](https://github.com/biobakery/MetaPhlAn): v3.0.7
@@ -65,58 +97,50 @@ PBS jobs management (`qsub`, `qstat`) with the help of [snakemake](https://snake
 - Software for report:
   - seqkit: v0.15.0
 
-### 2.2. Database
-
-- Human reference (for bowtie2 index):
-  - [CHM13](https://github.com/nanopore-wgs-consortium/CHM13)
-  - [Hg38](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.39/)
-- MetaPhlAn3 index ([new version](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-3.0)):
-  - mpa_v30_CHOCOPhlAn_201901
-  - [more db version](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)
-
-## 3. Installation
-
-It's recommended to use [Miniconda](https://docs.conda.io/en/latest/miniconda.html) to simplify the installation.
-
-```shell
+```Shell
 conda create -n mmhp_sop_rmhost python=3.6.13
 conda activate mmhp_sop_rmhost
 conda install -c bioconda bowtie2=2.3.5.1
 conda install -c bioconda samtools=1.11
 conda install -c bioconda seqkit fastp
 # conda install -c bioconda cutadapt
+conda activate mmhp_sop_rmhost
 pip3 install snakemake
 pip3 install metaphlan
-git clone https://github.com/MGI-EU/MMHP_SOP_rmhost.git
-cd MMHP_SOP_rmhost
 ```
 
-## 4. Usage
+### 2.2. Prepare Database
 
-### 4.1. Database Preparation
-
-For human genome reference:
+- Human reference (for bowtie2 index):
+  - [CHM13](https://github.com/nanopore-wgs-consortium/CHM13)
+  - [Hg38.p13](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.39/)
 
 ```shell
-#cd MMHP_SOP_rmhost
 mkdir -p database/human_genome/
 wget --continue -q https://s3.amazonaws.com/nanopore-human-wgs/chm13/assemblies/chm13.draft_v1.0.fasta.gz
 
-########
+
+################ Chromosome Y
+######## Option 1
 ## Users would better add chromosome Y from Hg38 to CHM13 reference because CHM13 doesn't contain chrY.
 ## For chrY, users could manually download Hg38.p13 chromosome Y sequence from https://www.ncbi.nlm.nih.gov/nuccore/CM000686.2?report=fasta 
 ## After downloading, change the chromosome name to ">chrY"
 ## Assume that the chrY sequence file has been named to hg38.chrY.fasta
-########
+
+######## Option 2
+curl -s  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=CM000686.2&rettype=fasta&retmode=txt" > hg38.chrY.fasta
+################
 
 gzip -dc chm13.draft_v1.0.fasta.gz > database/human_genome/human_reference.fasta
 cat hg38.chrY.fasta >> database/human_genome/human_reference.fasta
 
-#conda activate mmhp_sop_rmhost
+conda activate mmhp_sop_rmhost
 bowtie2-build -f --threads 4 database/human_genome/human_reference.fasta database/human_genome/human_reference
 ```
 
-For MetaPhlAn3.0 refernece:
+- MetaPhlAn3 index ([new version](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-3.0)):
+  - mpa_v30_CHOCOPhlAn_201901
+  - [more db version](https://drive.google.com/drive/folders/1_HaY16mT7mZ_Z8JtesH8zCfG9ikWcLXG)
 
 ```shell
 ########
@@ -127,7 +151,16 @@ mkdir -p database/metaphlan_database/
 metaphlan --install --index mpa_v30_CHOCOPhlAn_201901 --bowtie2db ./database/metaphlan_database
 ```
 
-### 4.2. Configuration Preparation
+### 2.3. Install the Pipeline
+
+```shell
+git clone https://github.com/MGI-EU/MMHP_SOP_rmhost.git
+cd MMHP_SOP_rmhost
+```
+
+## 3. Usage
+
+### 3.1. Configuration Preparation
 
 Please edit `sample.txt`, `config.yaml`, `cluster.yaml` files in `MMHP_SOP_rmhost` folder according to users' needs.
 
@@ -148,27 +181,32 @@ Note:
 - `metaphlan3.bowtie2db` should be the same as `--bowtie2db` in metaphlan reference preparation step
 - `metaphlan3.index` should be the same as `--index` in metaphlan reference preparation step
 
-### 4.3. Run
+### 3.2. Run
 
 ```shell
-#conda activate mmhp_sop_rmhost
-
+conda activate mmhp_sop_rmhost
 sh work.sh &>work.out &
 ```
 
-## 5. Updates
+## 4. Updates
+
+April 24th, 2021
+
+1. Update README layout with reference to [arpcard/rgi](https://github.com/arpcard/rgi).
+2. Separate the `contributors` and `aknowledge` sections.
+3. Add an option to download hg38.chrY reference by command line.
 
 April 12th, 2021
 
 1. Create repository.
 2. Only support PBS commands in this version.
 
-## 6. Analysis Plan
+## 5. Project Plan
 
 ### Todo
 
+- Add parameters to control analysis steps
 - assembled contigs test
-- min_len test
 - add more test details and results (1000 genome samples)
 - rgi
 
@@ -178,16 +216,12 @@ April 12th, 2021
 - fastp parameters test
 - bowtie2 parameters test
 - CHM13 and Hg38 reference test
+- min_len test
 
-## Reference
+## Known issues
 
-- <https://github.com/ohmeta/metapi>
+1. `curl` may raise an error while downloading hg38.chrY reference data. The downloaded file may not be complete. It depends on user to download manually or using the "option 2" command.
 
-## Acknowledgement
-
-- Mathieu Almeida
-- Liu Tian, BGI
-- Bochen Cheng, MGI
-- Jie Zhu, BGI
-
-## License
+   ```Text
+   curl: (16) Error in the HTTP2 framing layer
+   ```
