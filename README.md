@@ -54,6 +54,7 @@ The pipeline is extracted and modified from [ohmeta/metapi](https://github.com/o
 (Researcher, Organization/Institution) in alphabetical order.
 
 - Bochen Cheng, MGI
+- ‪Florian Plaza Oñate, INRAE MetaGenoPolis
 - Liu Tian, BGI-Research
 - Mathieu Almeida, INRAE MetaGenoPolis
 - Shixu He, MGI
@@ -62,7 +63,6 @@ The pipeline is extracted and modified from [ohmeta/metapi](https://github.com/o
 
 (Researcher, Organization/Institution) in alphabetical order.
 
-- ‪Florian Plaza Oñate, INRAE MetaGenoPolis
 - Jie Zhu, BGI-Research
 
 ### Citation
@@ -114,6 +114,7 @@ pip3 install metaphlan
 - Human reference (for bowtie2 index):
   - [CHM13](https://github.com/nanopore-wgs-consortium/CHM13)
   - [Hg38.p13](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.39/)
+  - [IGC2 Human gene variants](https://data.inrae.fr/dataset.xhtml?persistentId=doi:10.15454/FLANUP) (excluded in current version)
 
 ```shell
 mkdir -p database/human_genome/
@@ -126,7 +127,7 @@ wget --continue -q https://s3.amazonaws.com/nanopore-human-wgs/chm13/assemblies/
 ## For chrY, users could manually download Hg38.p13 chromosome Y sequence from https://www.ncbi.nlm.nih.gov/nuccore/CM000686.2?report=fasta 
 ## After downloading, change the chromosome name to ">chrY"
 ## Assume that the chrY sequence file has been named to hg38.chrY.fasta
-
+################
 ######## Option 2
 curl -s  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=CM000686.2&rettype=fasta&retmode=txt" > hg38.chrY.fasta
 ################
@@ -220,7 +221,7 @@ April 12th, 2021
 
 ## Known issues
 
-1. `curl` may raise an error while downloading hg38.chrY reference data. The downloaded file may not be complete. It depends on user to download manually or using the "option 2" command.
+1. `curl` may raise an error while downloading hg38.chrY reference data (from China). The downloaded file may not be complete. It depends on user to download manually or using the "option 2" command.
 
    ```Text
    curl: (16) Error in the HTTP2 framing layer
