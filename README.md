@@ -114,29 +114,31 @@ pip3 install metaphlan
 - Human reference (for bowtie2 index):
   - [CHM13](https://github.com/nanopore-wgs-consortium/CHM13)
   - [Hg38.p13](https://www.ncbi.nlm.nih.gov/assembly/GCF_000001405.39/)
-  - [IGC2 Human gene variants](https://data.inrae.fr/dataset.xhtml?persistentId=doi:10.15454/FLANUP) (excluded in current version)
+  - ~~[IGC2 Human gene variants](https://data.inrae.fr/dataset.xhtml?persistentId=doi:10.15454/FLANUP) (excluded in current version)~~
 
 ```shell
 mkdir -p database/human_genome/
-wget --continue -q https://s3.amazonaws.com/nanopore-human-wgs/chm13/assemblies/chm13.draft_v1.0.fasta.gz
-
-
-################ Chromosome Y
-######## Option 1
-## Users would better add chromosome Y from Hg38 to CHM13 reference because CHM13 doesn't contain chrY.
-## For chrY, users could manually download Hg38.p13 chromosome Y sequence from https://www.ncbi.nlm.nih.gov/nuccore/CM000686.2?report=fasta 
-## After downloading, change the chromosome name to ">chrY"
-## Assume that the chrY sequence file has been named to hg38.chrY.fasta
-################
-######## Option 2
-curl -s  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=CM000686.2&rettype=fasta&retmode=txt" > hg38.chrY.fasta
-################
-
-gzip -dc chm13.draft_v1.0.fasta.gz > database/human_genome/human_reference.fasta
-cat hg38.chrY.fasta >> database/human_genome/human_reference.fasta
-
-conda activate mmhp_sop_rmhost
-bowtie2-build -f --threads 4 database/human_genome/human_reference.fasta database/human_genome/human_reference
+wget --continue -q https://genome-idx.s3.amazonaws.com/bt/chm13.draft_v1.0_plusY.zip
+unzip chm13.draft_v1.0_plusY.zip
+mv chm13.draft_v1.0_plusY/* database/human_genome/; rm -rf chm13.draft_v1.0_plusY/
+##wget --continue -q https://s3.amazonaws.com/nanopore-human-wgs/chm13/assemblies/chm13.draft_v1.0.fasta.gz
+##
+################## Chromosome Y
+########## Option 1
+#### Users would better add chromosome Y from Hg38 to CHM13 reference because CHM13 doesn't contain chrY.
+#### For chrY, users could manually download Hg38.p13 chromosome Y sequence from https://www.ncbi.nlm.nih.gov/nuccore/CM000686.2?report=fasta 
+#### After downloading, change the chromosome name to ">chrY"
+#### Assume that the chrY sequence file has been named to hg38.chrY.fasta
+##################
+########## Option 2
+##curl -s  "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=nucleotide&id=CM000686.2&rettype=fasta&retmode=txt" > hg38.chrY.fasta
+##################
+##
+##gzip -dc chm13.draft_v1.0.fasta.gz > database/human_genome/human_reference.fasta
+##cat hg38.chrY.fasta >> database/human_genome/human_reference.fasta
+##
+##conda activate mmhp_sop_rmhost
+##bowtie2-build -f --threads 4 database/human_genome/human_reference.fasta database/human_genome/human_reference
 ```
 
 - MetaPhlAn3 index ([new version](https://github.com/biobakery/MetaPhlAn/wiki/MetaPhlAn-3.0)):
@@ -178,9 +180,9 @@ The most important parameters to edit:
 
 Note:
 
-- `rmhost.bowtie2_index` should be the same as `bowtie2-build` output in human genome reference preparation step
-- `metaphlan3.bowtie2db` should be the same as `--bowtie2db` in metaphlan reference preparation step
-- `metaphlan3.index` should be the same as `--index` in metaphlan reference preparation step
+- `rmhost.bowtie2_index` should be `./database/human_genome/chm13.draft_v1.0_plusY`.
+- `metaphlan3.bowtie2db` should be `./database/metaphlan_database`.
+- `metaphlan3.index` should be the same as `--index` in metaphlan reference preparation step.
 
 ### 3.2. Run
 
