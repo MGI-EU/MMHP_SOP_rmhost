@@ -53,17 +53,19 @@ The pipeline is extracted and modified from [ohmeta/metapi](https://github.com/o
 
 (Researcher, Organization/Institution) in alphabetical order.
 
-- Bochen Cheng, MGI
+- Bochen Cheng, MGI-Latvia
 - ‪Florian Plaza Oñate, INRAE MetaGenoPolis
 - Liu Tian, BGI-Research
 - Mathieu Almeida, INRAE MetaGenoPolis
-- Shixu He, MGI
+- Shixu He, MGI-Latvia
 
 ### Acknowledgement
 
 (Researcher, Organization/Institution) in alphabetical order.
 
+- Agnese Zlatopolska, MGI-Latvia
 - Jie Zhu, BGI-Research
+- Yan Zhou, MGI-Latvia
 
 ### Citation
 
